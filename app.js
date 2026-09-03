@@ -103,6 +103,9 @@
     if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(endpoint)) { showError("De Google Drive-koppeling moet nog één keer worden ingesteld."); return; }
     var callback = "__receiveRecipes";
     var request = document.createElement("script");
+    // De web-app is openbaar. Zonder inlogcookies voorkomt dit dat Google bij
+    // gebruikers met meerdere accounts naar een ongeldige /macros/u/... URL stuurt.
+    request.crossOrigin = "anonymous";
     var timeout = window.setTimeout(function () { request.remove(); showError("Google Drive reageert niet. Probeer de pagina later opnieuw te laden."); }, 15000);
     window[callback] = function (data) {
       window.clearTimeout(timeout); request.remove(); delete window[callback];
