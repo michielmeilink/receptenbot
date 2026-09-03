@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mijn gerechten</title>
+  <meta name="description" content="Een eenvoudige, actuele verzameling recepten uit Google Drive.">
+  <meta property="og:title" content="Mijn gerechten">
+  <meta property="og:description" content="Een eenvoudige verzameling recepten.">
+  <meta property="og:url" content="https://recepten.michielmeilink.com/">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://recepten.michielmeilink.com/">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/app.css">
+  <script src="/config.js"></script>
+  <script src="/app.js" defer></script>
+</head>
+<body class="library-body">
+  <header class="site-header library-header">
+    <a class="brand" href="/" aria-label="Mijn gerechten">
+      <span class="brand-mark" aria-hidden="true">G</span>
+      <span>Mijn gerechten</span>
+    </a>
+    <nav class="site-nav" aria-label="Informatie">
+      <a href="/privacy/">Privacy</a>
+      <a href="/voorwaarden/">Voorwaarden</a>
+    </nav>
+  </header>
+
+  <main class="library-main">
+    <section class="library-toolbar" aria-label="Gerechten zoeken">
+      <label class="search-field">
+        <span class="sr-only">Zoek een gerecht</span>
+        <input id="search" type="search" placeholder="Zoek een gerecht…" autocomplete="off">
+      </label>
+      <span id="recipe-count" class="recipe-count" aria-live="polite"></span>
+    </section>
+
+    <p id="status" class="library-status" role="status">Gerechten laden…</p>
+
+    <section id="library" class="library-shell" hidden>
+      <aside class="recipe-index" aria-label="Gerechten">
+        <ul id="recipe-list" class="recipe-list"></ul>
+        <p id="empty-state" class="empty-state" hidden>Geen gerechten gevonden.</p>
+      </aside>
+
+      <article id="recipe-detail" class="recipe-detail" aria-live="polite">
+        <button id="back-button" class="back-button" type="button">← Alle gerechten</button>
+        <p class="document-label">Google Docs · Gerechten</p>
+        <h1 id="recipe-title"></h1>
+        <div id="recipe-content" class="document-content"></div>
+        <p id="recipe-updated" class="document-updated"></p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer library-footer">
+    <span>© 2026 Michiel Meilink</span>
+    <a href="mailto:michielmeilink@gmail.com">Contact</a>
+  </footer>
+</body>
+</html>
