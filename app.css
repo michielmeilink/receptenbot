@@ -15,6 +15,9 @@
 .recipe-list button { width: 100%; padding: 14px 16px; border: 0; border-radius: 9px; background: transparent; color: var(--ink); font: inherit; font-weight: 600; line-height: 1.35; text-align: left; cursor: pointer; }
 .recipe-list button:hover, .recipe-list button:focus-visible { background: var(--green-soft); outline: none; }
 .recipe-list button[aria-current="true"] { background: var(--green); color: #fff; }
+.recipe-list button { display: flex; align-items: center; gap: 12px; }
+.recipe-thumbnail { width: 58px; height: 58px; flex: 0 0 58px; object-fit: cover; border-radius: 7px; }
+.recipe-photo { display: block; width: 100%; max-height: 520px; object-fit: contain; border-radius: 12px; margin: 0 0 28px; background: #faf9f5; }
 .empty-state { padding: 24px; color: var(--muted); text-align: center; }
 .recipe-detail { padding: clamp(30px, 6vw, 72px); background: #fff; }
 .document-label { margin: 0 0 28px; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }

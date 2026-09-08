@@ -20,7 +20,8 @@ function readRecipes() {
     const file = files.next();
     if (file.isTrashed()) continue;
     const document = DocumentApp.openById(file.getId());
-    recipes.push({ id: file.getId(), title: document.getName(), text: document.getBody().getText(), updated: file.getLastUpdated().toISOString() });
+    const photo = /^receptenbot-foto:([A-Za-z0-9_-]+)$/.exec(file.getDescription() || "");
+    recipes.push({ id: file.getId(), title: document.getName(), text: document.getBody().getText(), updated: file.getLastUpdated().toISOString(), image: photo ? "https://lh3.googleusercontent.com/d/" + photo[1] : "" });
   }
   recipes.sort((a, b) => a.title.localeCompare(b.title));
   return recipes;

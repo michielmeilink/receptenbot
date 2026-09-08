@@ -37,6 +37,13 @@
   function renderDocument(recipe) {
     title.textContent = recipe.title;
     content.textContent = "";
+    if (validPhoto(recipe.image)) {
+      var photo = el("img", "recipe-photo");
+      photo.src = recipe.image; photo.alt = "Eindresultaat van " + recipe.title;
+      photo.referrerPolicy = "no-referrer";
+      photo.addEventListener("error", function () { photo.remove(); });
+      content.appendChild(photo);
+    }
     var lines = (recipe.text || "").replace(/\r/g, "").split("\n");
     if (lines.length && lines[0].trim().toLocaleLowerCase("nl") === recipe.title.trim().toLocaleLowerCase("nl")) lines.shift();
     var bullets = [];
@@ -81,10 +88,21 @@
     count.textContent = recipes.length + (recipes.length === 1 ? " gerecht" : " gerechten");
     recipes.forEach(function (recipe) {
       var button = el("button", "", recipe.title); button.type = "button";
+      if (validPhoto(recipe.image)) {
+        var thumbnail = el("img", "recipe-thumbnail");
+        thumbnail.src = recipe.image + "=w160"; thumbnail.alt = "";
+        thumbnail.loading = "lazy"; thumbnail.referrerPolicy = "no-referrer";
+        thumbnail.addEventListener("error", function () { thumbnail.remove(); });
+        button.prepend(thumbnail);
+      }
       button.setAttribute("aria-current", recipe.id === state.selectedId ? "true" : "false");
       button.addEventListener("click", function () { selectRecipe(recipe.id, true); });
       var item = el("li"); item.appendChild(button); list.appendChild(item);
     });
+  }
+
+  function validPhoto(url) {
+    return typeof url === "string" && /^https:\/\/lh3\.googleusercontent\.com\/d\/[A-Za-z0-9_-]+$/.test(url);
   }
 
   function showRecipes(data) {
