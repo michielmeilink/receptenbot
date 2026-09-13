@@ -11,6 +11,7 @@
   var content = document.getElementById("recipe-content");
   var updated = document.getElementById("recipe-updated");
   var back = document.getElementById("back-button");
+  var listScroll = 0;
 
   function el(tag, className, text) {
     var node = document.createElement(tag);
@@ -77,9 +78,11 @@
   function selectRecipe(id, pushHash) {
     var recipe = state.recipes.find(function (item) { return item.id === id; });
     if (!recipe) return;
+    if (pushHash) listScroll = window.scrollY;
     state.selectedId = id; renderDocument(recipe); renderList(); library.classList.add("show-detail");
     if (pushHash) history.replaceState(null, "", "#" + encodeURIComponent(id));
     window.scrollTo({ top: 0, behavior: "smooth" });
+    if (pushHash) title.focus({ preventScroll: true });
   }
 
   function renderList() {
@@ -87,14 +90,19 @@
     list.textContent = ""; empty.hidden = recipes.length !== 0;
     count.textContent = recipes.length + (recipes.length === 1 ? " gerecht" : " gerechten");
     recipes.forEach(function (recipe) {
-      var button = el("button", "", recipe.title); button.type = "button";
+      var button = el("button"); button.type = "button";
+      var placeholder = el("span", "recipe-placeholder", recipe.title.charAt(0).toLocaleUpperCase("nl"));
+      placeholder.setAttribute("aria-hidden", "true");
       if (validPhoto(recipe.image)) {
         var thumbnail = el("img", "recipe-thumbnail");
         thumbnail.src = recipe.image + "=w160"; thumbnail.alt = "";
         thumbnail.loading = "lazy"; thumbnail.referrerPolicy = "no-referrer";
-        thumbnail.addEventListener("error", function () { thumbnail.remove(); });
-        button.prepend(thumbnail);
-      }
+        thumbnail.width = 64; thumbnail.height = 64;
+        thumbnail.addEventListener("error", function () { thumbnail.replaceWith(placeholder); });
+        button.appendChild(thumbnail);
+      } else button.appendChild(placeholder);
+      button.appendChild(el("span", "recipe-name", recipe.title));
+      var chevron = el("span", "recipe-chevron", "›"); chevron.setAttribute("aria-hidden", "true"); button.appendChild(chevron);
       button.setAttribute("aria-current", recipe.id === state.selectedId ? "true" : "false");
       button.addEventListener("click", function () { selectRecipe(recipe.id, true); });
       var item = el("li"); item.appendChild(button); list.appendChild(item);
@@ -112,6 +120,7 @@
     if (!state.recipes.length) { title.textContent = "Nog geen gerechten"; content.textContent = "De map Gerechten bevat momenteel geen Google Docs-documenten."; return; }
     var hashId = decodeURIComponent(location.hash.slice(1));
     selectRecipe(state.recipes.some(function (item) { return item.id === hashId; }) ? hashId : state.recipes[0].id, false);
+    if (!hashId || !state.recipes.some(function (item) { return item.id === hashId; })) library.classList.remove("show-detail");
   }
 
   function showError(message) { status.textContent = message; status.classList.add("is-error"); status.hidden = false; library.hidden = true; }
@@ -135,6 +144,12 @@
   }
 
   search.addEventListener("input", function () { state.query = search.value; renderList(); });
-  back.addEventListener("click", function () { library.classList.remove("show-detail"); search.focus(); });
+  back.addEventListener("click", function () {
+    library.classList.remove("show-detail");
+    history.replaceState(null, "", location.pathname + location.search);
+    var selected = list.querySelector('[aria-current="true"]');
+    if (selected) selected.focus({ preventScroll: true });
+    window.scrollTo({ top: listScroll, behavior: "instant" });
+  });
   loadRecipes();
 })();
